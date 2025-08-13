@@ -27,9 +27,14 @@ uvicorn app:app --reload --port 4002
 ## Intentional BOLA-like Endpoints
 - Express:
   - `GET /api/users/:userId` (no ownership check)
-  - `PUT /api/users/:userId` (auth but no ownership enforcement)
-  - `GET /api/accounts/:accountId/orders/:orderId` (no ownership check)
+  - `PUT /api/users/:userId` (API-key auth, no ownership)
+  - `GET /api/accounts/:accountId/orders/:orderId` (no ownership)
   - `DELETE /api/admin/users/:userId` (API-key only)
+  - Library domain:
+    - `GET /api/books` (public list)
+    - `GET /api/users/:userId/checkouts/:checkoutId` (auth but no ownership)
+    - `PATCH /api/users/:userId/checkouts/:checkoutId` (auth but no ownership)
+    - `GET /api/admin/checkouts/:userId` (API-key only)
 - FastAPI:
   - `GET /profiles/{user_id}` (no auth)
   - `GET /documents/{doc_id}` (API-key only)
