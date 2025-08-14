@@ -42,6 +42,16 @@ app.get('/api/admin/checkouts/:userId', apiKeyAuth, (req, res) => {
   res.json([{ checkoutId: '10', userId: req.params.userId, bookId: '1' }]);
 });
 
+// Business logic flow: role change (intentionally flawed confirm step without role check)
+app.post('/api/admin/users/:userId', apiKeyAuth, (req, res) => {
+  res.json({ queued: true, target: req.params.userId });
+});
+
+app.post('/api/admin/users/confirmUpdate', (req, res) => {
+  // Missing admin check: Business Logic BOLA
+  res.json({ updated: true });
+});
+
 const PORT = process.env.PORT || 4001;
 app.listen(PORT, () => console.log(`Sample Express app on :${PORT}`));
 
