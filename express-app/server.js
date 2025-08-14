@@ -52,6 +52,19 @@ app.post('/api/admin/users/confirmUpdate', (req, res) => {
   res.json({ updated: true });
 });
 
+// Additional business logic cases
+// Order confirmation without robust authorization
+app.post('/api/orders/:orderId/confirm', (req, res) => {
+  // Missing auth/ownership; business-critical state change
+  res.json({ confirmed: true, orderId: req.params.orderId });
+});
+
+// Finalize checkout without explicit authorization
+app.post('/api/checkout/:checkoutId/finalize', (req, res) => {
+  // Missing auth/ownership validation
+  res.json({ finalized: true, checkoutId: req.params.checkoutId });
+});
+
 // Contextual BOLA demo: manager can view reviews but without verifying reporting relationship
 app.get('/api/reviews/:employeeId', requireManager, (req, res) => {
   // Missing check: ensure employeeId belongs to req.user's direct reports
