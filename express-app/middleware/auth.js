@@ -11,3 +11,11 @@ module.exports.requireAuth = (req, res, next) => {
   next();
 };
 
+// Simulated manager auth (no relationship validation)
+module.exports.requireManager = (req, res, next) => {
+  const userId = req.headers['x-user-id'];
+  if (!userId) return res.status(401).json({ error: 'unauthenticated' });
+  req.user = { id: String(userId), role: 'manager' };
+  next();
+};
+

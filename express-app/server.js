@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 app.use(express.json());
 
-const { apiKeyAuth, requireAuth } = require('./middleware/auth');
+const { apiKeyAuth, requireAuth, requireManager } = require('./middleware/auth');
 
 // Intentionally missing ownership check
 app.get('/api/users/:userId', (req, res) => {
@@ -50,6 +50,23 @@ app.post('/api/admin/users/:userId', apiKeyAuth, (req, res) => {
 app.post('/api/admin/users/confirmUpdate', (req, res) => {
   // Missing admin check: Business Logic BOLA
   res.json({ updated: true });
+});
+
+// Contextual BOLA demo: manager can view reviews but without verifying reporting relationship
+app.get('/api/reviews/:employeeId', requireManager, (req, res) => {
+  // Missing check: ensure employeeId belongs to req.user's direct reports
+  res.json({ employeeId: req.params.employeeId, review: 'Exceeds expectations' });
+});
+
+// Group membership example: project docs access with stale membership
+let projectMembers = new Set(['101','102']);
+app.get('/api/projects/dragon/documents/:docId', requireAuth, (req, res) => {
+  // Vulnerable: trusts membership from token (simulated); does not check live membership set
+  res.json({ docId: req.params.docId, title: 'Dragon Spec' });
+});
+app.post('/api/projects/dragon/members/remove/:userId', apiKeyAuth, (req, res) => {
+  projectMembers.delete(req.params.userId);
+  res.json({ removed: req.params.userId });
 });
 
 const PORT = process.env.PORT || 4001;
