@@ -35,9 +35,15 @@ uvicorn app:app --reload --port 4002
     - `GET /api/users/:userId/checkouts/:checkoutId` (auth but no ownership)
     - `PATCH /api/users/:userId/checkouts/:checkoutId` (auth but no ownership)
     - `GET /api/admin/checkouts/:userId` (API-key only)
+  - Business logic:
+    - `POST /api/orders/:orderId/confirm` (no auth/ownership)
+    - `POST /api/checkout/:checkoutId/finalize` (no explicit authorization)
 - FastAPI:
   - `GET /profiles/{user_id}` (no auth)
   - `GET /documents/{doc_id}` (API-key only)
+  - Business logic:
+    - `POST /orders/{order_id}/confirm` (no auth/ownership)
+    - `POST /checkout/{checkout_id}/finalize` (API-key only, no ownership)
 
 Use this repo to validate repository ingestion, API function extraction, and RAG analysis.
 

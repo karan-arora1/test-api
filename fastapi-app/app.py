@@ -16,3 +16,17 @@ def get_document(doc_id: str, x_api_key: str | None = Header(default=None)):
         raise HTTPException(status_code=401, detail="missing api key")
     return {"doc_id": doc_id, "content": "Secret"}
 
+
+@app.post("/orders/{order_id}/confirm")
+def confirm_order(order_id: str):
+    # Business step without auth/ownership
+    return {"confirmed": True, "order_id": order_id}
+
+
+@app.post("/checkout/{checkout_id}/finalize")
+def finalize_checkout(checkout_id: str, x_api_key: str | None = Header(default=None)):
+    # API-key only, no ownership check during finalization
+    if not x_api_key:
+        raise HTTPException(status_code=401, detail="missing api key")
+    return {"finalized": True, "checkout_id": checkout_id}
+
